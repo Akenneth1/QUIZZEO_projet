@@ -1,0 +1,134 @@
+-- Le rôle Administrateur : Peut tout voir et tout activer/désactiver.
+CREATE ROLE administrateur;
+
+-- Le rôle Propriétaire de Quiz : Peut créer, modifier, lancer et voir le statut de SES quiz.
+CREATE ROLE proprietaire_quiz;
+
+-- Le rôle Créateur de Quiz : Peut créer et modifier le contenu des quiz (rédacteur).
+CREATE ROLE createur_quiz;
+
+-- Le rôle Utilisateur : Peut voir et compléter les quiz actifs/lancés.
+CREATE ROLE utilisateur_quiz;
+
+-- Le rôle Visiteur : Lecture seule sur des informations publiques (s'il y en a).
+CREATE ROLE visiteur;
+
+-- Table des administrateurs
+CREATE TABLE administrateurs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(50),
+    email VARCHAR(100),
+    mot_de_passe VARCHAR(100)
+);
+ 
+-- Table des utilisateurs
+CREATE TABLE utilisateurs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(50),
+    email VARCHAR(100),
+    mot_de_passe VARCHAR(100)
+);
+ 
+-- Table des entreprises
+CREATE TABLE entreprises (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100),
+    adresse VARCHAR(150),
+    email VARCHAR(100)
+);
+ 
+-- Table des ecoles
+CREATE TABLE ecoles (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100),
+    adresse VARCHAR(150),
+    email VARCHAR(100)
+);
+
+INSERT INTO administrateurs (nom, email, mot_de_passe) VALUES
+('Admin1', 'admin1@mail.com', 'pass1'),
+('Admin2', 'admin2@mail.com', 'pass2'),
+('Admin3', 'admin3@mail.com', 'pass3'),
+('Admin4', 'admin4@mail.com', 'pass4'),
+('Admin5', 'admin5@mail.com', 'pass5');
+
+INSERT INTO utilisateurs (nom, email, mot_de_passe) VALUES
+('User1', 'user1@mail.com', 'pass1'),
+('User2', 'user2@mail.com', 'pass2'),
+('User3', 'user3@mail.com', 'pass3'),
+('User4', 'user4@mail.com', 'pass4'),
+('User5', 'user5@mail.com', 'pass5'),
+('User6', 'user6@mail.com', 'pass6'),
+('User7', 'user7@mail.com', 'pass7'),
+('User8', 'user8@mail.com', 'pass8'),
+('User9', 'user9@mail.com', 'pass9'),
+('User10', 'user10@mail.com', 'pass10'),
+('User11', 'user11@mail.com', 'pass11'),
+('User12', 'user12@mail.com', 'pass12'),
+('User13', 'user13@mail.com', 'pass13'),
+('User14', 'user14@mail.com', 'pass14'),
+('User15', 'user15@mail.com', 'pass15'),
+('User16', 'user16@mail.com', 'pass16'),
+('User17', 'user17@mail.com', 'pass17'),
+('User18', 'user18@mail.com', 'pass18'),
+('User19', 'user19@mail.com', 'pass19'),
+('User20', 'user20@mail.com', 'pass20'),
+('User21', 'user21@mail.com', 'pass21'),
+('User22', 'user22@mail.com', 'pass22'),
+('User23', 'user23@mail.com', 'pass23'),
+('User24', 'user24@mail.com', 'pass24'),
+('User25', 'user25@mail.com', 'pass25');
+
+INSERT INTO entreprises (nom, adresse, email) VALUES
+('Entreprise1', 'Adresse1', 'entreprise1@mail.com'),
+('Entreprise2', 'Adresse2', 'entreprise2@mail.com'),
+('Entreprise3', 'Adresse3', 'entreprise3@mail.com'),
+('Entreprise4', 'Adresse4', 'entreprise4@mail.com'),
+('Entreprise5', 'Adresse5', 'entreprise5@mail.com'),
+('Entreprise6', 'Adresse6', 'entreprise6@mail.com'),
+('Entreprise7', 'Adresse7', 'entreprise7@mail.com'),
+('Entreprise8', 'Adresse8', 'entreprise8@mail.com'),
+('Entreprise9', 'Adresse9', 'entreprise9@mail.com'),
+('Entreprise10', 'Adresse10', 'entreprise10@mail.com'),
+('Entreprise11', 'Adresse11', 'entreprise11@mail.com'),
+('Entreprise12', 'Adresse12', 'entreprise12@mail.com'),
+('Entreprise13', 'Adresse13', 'entreprise13@mail.com'),
+('Entreprise14', 'Adresse14', 'entreprise14@mail.com'),
+('Entreprise15', 'Adresse15', 'entreprise15@mail.com'),
+('Entreprise16', 'Adresse16', 'entreprise16@mail.com'),
+('Entreprise17', 'Adresse17', 'entreprise17@mail.com'),
+('Entreprise18', 'Adresse18', 'entreprise18@mail.com'),
+('Entreprise19', 'Adresse19', 'entreprise19@mail.com'),
+('Entreprise20', 'Adresse20', 'entreprise20@mail.com'),
+('Entreprise21', 'Adresse21', 'entreprise21@mail.com'),
+('Entreprise22', 'Adresse22', 'entreprise22@mail.com'),
+('Entreprise23', 'Adresse23', 'entreprise23@mail.com'),
+('Entreprise24', 'Adresse24', 'entreprise24@mail.com'),
+('Entreprise25', 'Adresse25', 'entreprise25@mail.com');
+
+INSERT INTO ecoles (nom, adresse, email) VALUES
+('Ecole1', 'Adresse1', 'ecole1@mail.com'),
+('Ecole2', 'Adresse2', 'ecole2@mail.com'),
+('Ecole3', 'Adresse3', 'ecole3@mail.com'),
+('Ecole4', 'Adresse4', 'ecole4@mail.com'),
+('Ecole5', 'Adresse5', 'ecole5@mail.com'),
+('Ecole6', 'Adresse6', 'ecole6@mail.com'),
+('Ecole7', 'Adresse7', 'ecole7@mail.com'),
+('Ecole8', 'Adresse8', 'ecole8@mail.com'),
+('Ecole9', 'Adresse9', 'ecole9@mail.com'),
+('Ecole10', 'Adresse10', 'ecole10@mail.com'),
+('Ecole11', 'Adresse11', 'ecole11@mail.com'),
+('Ecole12', 'Adresse12', 'ecole12@mail.com'),
+('Ecole13', 'Adresse13', 'ecole13@mail.com'),
+('Ecole14', 'Adresse14', 'ecole14@mail.com'),
+('Ecole15', 'Adresse15', 'ecole15@mail.com'),
+('Ecole16', 'Adresse16', 'ecole16@mail.com'),
+('Ecole17', 'Adresse17', 'ecole17@mail.com'),
+('Ecole18', 'Adresse18', 'ecole18@mail.com'),
+('Ecole19', 'Adresse19', 'ecole19@mail.com'),
+('Ecole20', 'Adresse20', 'ecole20@mail.com'),
+('Ecole21', 'Adresse21', 'ecole21@mail.com'),
+('Ecole22', 'Adresse22', 'ecole22@mail.com'),
+('Ecole23', 'Adresse23', 'ecole23@mail.com'),
+('Ecole24', 'Adresse24', 'ecole24@mail.com'),
+('Ecole25', 'Adresse25', 'ecole25@mail.com');
