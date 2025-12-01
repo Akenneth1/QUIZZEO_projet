@@ -14,12 +14,26 @@ CREATE ROLE utilisateur_quiz;
 CREATE ROLE visiteur;
 
 -- Table des administrateurs
-CREATE TABLE administrateurs (
+CREATE TABLE roles (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(50),
-    email VARCHAR(100),
-    mot_de_passe VARCHAR(100)
+    nom_role VARCHAR(50) UNIQUE NOT NULL
 );
+
+-- Insertion des rôles existants
+INSERT INTO roles (nom_role) VALUES
+('administrateur'),
+('proprietaire_quiz'),
+('createur_quiz'),
+('utilisateur_quiz'),
+('visiteur');
+
+-- Insertion des rôles existants
+INSERT INTO roles (nom_role) VALUES
+('administrateur'),
+('proprietaire_quiz'),
+('createur_quiz'),
+('utilisateur_quiz'),
+('visiteur');
  
 -- Table des utilisateurs
 CREATE TABLE utilisateurs (
@@ -43,6 +57,44 @@ CREATE TABLE ecoles (
     nom VARCHAR(100),
     adresse VARCHAR(150),
     email VARCHAR(100)
+);
+
+
+CREATE TABLE utilisateur_roles (
+    utilisateur_id INT,
+    role_id INT,
+    PRIMARY KEY (utilisateur_id, role_id),
+    FOREIGN KEY (utilisateur_id) REFERENCES utilisateurs(id) ON DELETE CASCADE,
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE
+);
+
+CREATE TABLE quizzes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    titre VARCHAR(255) NOT NULL,
+    description TEXT,
+    -- Clé étrangère vers l'utilisateur qui a créé le quiz.
+    createur_id INT, 
+    -- Peut être 'brouillon', 'lance', 'termine', etc.
+    statut VARCHAR(50) DEFAULT 'brouillon', 
+    date_creation DATETIME DEFAULT CURRENT_TIMESTAMP,
+    date_lancement DATETIME NULL,
+    FOREIGN KEY (createur_id) REFERENCES utilisateurs(id) ON DELETE SET NULL
+);
+
+CREATE TABLE questions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    quiz_id INT NOT NULL,
+    texte_question TEXT NOT NULL,
+    type_question VARCHAR(50) DEFAULT 'choix_multiple', -- ex: choix_multiple, reponse_courte
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE options_reponses (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    question_id INT NOT NULL,
+    texte_option VARCHAR(255) NOT NULL,
+    est_correcte BOOLEAN DEFAULT FALSE, -- Vrai si c'est la bonne réponse
+    FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE
 );
 
 INSERT INTO administrateurs (nom, email, mot_de_passe) VALUES
@@ -132,3 +184,29 @@ INSERT INTO ecoles (nom, adresse, email) VALUES
 ('Ecole23', 'Adresse23', 'ecole23@mail.com'),
 ('Ecole24', 'Adresse24', 'ecole24@mail.com'),
 ('Ecole25', 'Adresse25', 'ecole25@mail.com');
+
+-- Accorder le rôle d'administrateur au rôle utilisateur 'administrateur'
+GRANT administrateur TO 'utilisateur_admin_reel'@'%'; -- Remplacez par le nom d'utilisateur/hôte réel si nécessaire
+
+-- Permettre au rôle 'administrateur' de tout sélectionner, insérer, mettre à jour et supprimer 
+-- sur les tables 'administrateurs', 'utilisateurs', 'entreprises' et 'ecoles'.
+
+-- Sur la table des administrateurs
+GRANT ALL PRIVILEGES ON administrateurs TO administrateur;
+
+-- Sur la table des utilisateurs
+GRANT ALL PRIVILEGES ON utilisateurs TO administrateur;
+
+-- Sur la table des entreprises
+GRANT ALL PRIVILEGES ON entreprises TO administrateur;
+
+-- Sur la table des écoles
+GRANT ALL PRIVILEGES ON ecoles TO administrateur;
+
+-- Si d'autres tables (comme les tables de quiz) existent, la même commande doit être appliquée :
+-- GRANT ALL PRIVILEGES ON nom_de_la_table_quiz TO administrateur; 
+
+-- Pour garantir que les privilèges s'appliquent aux futures tables qui pourraient être créées 
+-- (cette commande est souvent spécifique à PostgreSQL et peut varier ou ne pas exister dans MySQL/MariaDB) :
+-- ALTER DEFAULT PRIVILEGES FOR ROLE votre_utilisateur_admin 
+-- IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO administrateur;
