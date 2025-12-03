@@ -1,13 +1,10 @@
 <?php
  
-/**
- * LOBBY - Salle d'attente avant le quiz
- * Les joueurs voient leur nom et attendent que le quiz démarre
- */
+
 session_start();
 require_once 'includes/config.php';
  
-// Vérifier si le formulaire a été soumis
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pin = cleanInput($_POST['pin']);
     $playerName = cleanInput($_POST['player_name']);
@@ -16,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect('join.php?error=name');
     }
  
-    // Vérifier si le quiz existe
+    
     $pdo = getDbConnection();
     $sql = "SELECT * FROM quiz WHERE pin_code = :pin AND status = 'lance' AND active = 1";
     $stmt = $pdo->prepare($sql);
@@ -27,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         redirect('join.php?error=pin');
     }
  
-    // Ajouter le joueur au lobby
+    
     try {
         $sql = "INSERT INTO quiz_players (quiz_id, player_name) VALUES (:quiz_id, :player_name)
                 ON DUPLICATE KEY UPDATE joined_at = NOW(), is_active = 1";
@@ -37,16 +34,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':player_name' => $playerName
         ]);
     } catch (PDOException $e) {
-        // Le joueur existe déjà, c'est ok
+        
     }
  
-    // Sauvegarder dans la session
+   
     $_SESSION['quiz_id'] = $quiz['id'];
     $_SESSION['player_name'] = $playerName;
     $_SESSION['pin_code'] = $pin;
 }
  
-// Vérifier si le joueur est dans une session
+
 if (!isset($_SESSION['quiz_id']) || !isset($_SESSION['player_name'])) {
     redirect('join.php');
 }
@@ -55,13 +52,13 @@ $pdo = getDbConnection();
 $quizId = $_SESSION['quiz_id'];
 $playerName = $_SESSION['player_name'];
  
-// Récupérer les infos du quiz
+
 $sql = "SELECT * FROM quiz WHERE id = :id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':id' => $quizId]);
 $quiz = $stmt->fetch();
  
-// Récupérer tous les joueurs dans le lobby
+
 $sql = "SELECT player_name, joined_at FROM quiz_players WHERE quiz_id = :quiz_id AND is_active = 1 ORDER BY joined_at";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':quiz_id' => $quizId]);
@@ -246,12 +243,12 @@ $players = $stmt->fetchAll();
             ⏳ En attente du démarrage du quiz...
         </div>
  
-        <!-- Le bouton start sera visible seulement pour le créateur via une autre page -->
+        
         <a href="play.php" class="start-btn">▶️ COMMENCER</a>
     </div>
  
     <script>
-        // Rafraîchir la liste des joueurs toutes les 3 secondes
+        
         setInterval(function() {
             location.reload();
         }, 3000);

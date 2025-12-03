@@ -1,173 +1,66 @@
-# QUIZZEO - Version avec Base de Données MySQL
+📂 Architecture du Projet
+Pour faciliter la lecture du code, j'ai organisé mon arborescence de manière logique en séparant les vues, la logique métier et les ressources.
 
-## 📋 Description
+1. La Racine 
 
-Quizzeo est une plateforme de quiz en ligne permettant aux écoles et entreprises de créer des questionnaires.
+-index.html : Landing page vitrine pour les visiteurs.
 
-**Cette version utilise une base de données MySQL.**
+-dashboard.php : Le tableau de bord principal après connexion.
 
-## 🚀 Installation
+-ecole/ & entreprise/ : Dossiers contenant les logiques spécifiques à ces deux secteurs (versions adaptées du dashboard).
 
-### Prérequis
-- XAMPP (PHP 7.4+ et MySQL)
-- Navigateur web moderne
+2. Authentification & Sécurité
 
-### Étapes d'installation
 
-1. **Copier les fichiers**
-   - Placez le dossier `quizzeo-avec-bdd` dans `C:\xampp\htdocs\`
+login.php / register.php : Gestion des formulaires et hashage des mots de passe.
 
-2. **Démarrer XAMPP**
-   - Lancez XAMPP Control Panel
-   - Démarrez Apache et MySQL
+check_admin.php : Script de vérification inclus en début de fichier pour protéger les pages réservées à l'administration.
 
-3. **Créer la base de données**
-   - Ouvrez phpMyAdmin: `http://localhost/phpmyadmin`
-   - Cliquez sur "Importer"
-   - Sélectionnez le fichier `sql/database.sql`
-   - Cliquez sur "Exécuter"
-   - La base de données `quizzeo` sera créée avec toutes les tables et le compte admin
+logout.php : Destruction propre de la session.
 
-4. **Accéder à l'application**
-   - URL: `http://localhost/quizzeo-avec-bdd/login.php`
+3. La "Game Loop" (Cœur du Jeu)
 
-## 👥 Comptes de Test
+Le déroulement d'un quiz suit une logique séquentielle précise que nous avons découper en plusieurs fichiers pour la maintenabilité :
 
-Tous les comptes utilisent le mot de passe: **admin123**
+-Entrée : join.php (via code PIN) ou join_link.php (via URL).
 
-- **Administrateur:** admin@quizzeo.com
-- **École:** ecole@test.com
-- **Entreprise:** entreprise@test.com
-- **Utilisateur:** utilisateur@test.com
+-Attente : lobby.php (Salle d'attente avant le lancement par l'admin).
 
-## 📊 Structure de la Base de Données
+Jeu :
 
-### Tables principales:
+-take_quiz.php : Initialise la session de jeu.
 
-- **users** - Utilisateurs de l'application
-- **quiz** - Quiz créés
-- **questions** - Questions des quiz
-- **question_options** - Options pour les QCM
-- **responses** - Réponses aux quiz
-- **response_answers** - Réponses individuelles aux questions
+-play.php : Affiche la question courante.
 
-## 🔧 Configuration
+-check_answer.php : Vérifie la réponse, calcule le score et met à jour la BDD.
 
-### Modifier la connexion MySQL
+-next_question.php : Gère la pagination et détecte la fin du quiz.
 
-Éditez `includes/config.php`:
+Fin : results.php (Affichage du score final et du classement).
 
-```php
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'quizzeo');
-define('DB_USER', 'root');
-define('DB_PASS', '');  // Votre mot de passe MySQL
-```
+4. Backend & Configuration
 
-### Personnalisation visuelle
+/includes : Contient les éléments réutilisables (connexion BDD db.php, header.php, footer.php) pour éviter la répétition de code (principe DRY).
 
-- **CSS:** `assets/css/style.css`
-- **Logo:** `assets/images/logo.png`
+/admin : Back-office pour la modération globale et la gestion des utilisateurs.
 
-## 📁 Structure des Fichiers
+/assets : Stockage des feuilles de style CSS, scripts JS et images.
 
-```
-quizzeo-avec-bdd/
-├── sql/
-│   └── database.sql           # Script de création de la BDD
-├── includes/
-│   ├── config.php             # Configuration et connexion BDD
-│   ├── user_functions.php     # Fonctions utilisateurs
-│   ├── quiz_functions.php     # Fonctions quiz
-│   └── header.php             # En-tête commun
-├── assets/
-│   ├── css/style.css
-│   ├── js/main.js
-│   └── images/logo.png
-├── admin/
-│   └── dashboard.php          # Dashboard admin
-├── ecole/
-│   ├── dashboard.php
-│   ├── create_quiz.php
-│   └── results.php
-├── entreprise/
-│   ├── dashboard.php
-│   └── create_quiz.php
-├── utilisateur/
-│   ├── dashboard.php
-│   └── profil.php
-├── login.php
-├── register.php
-├── dashboard.php
-├── take_quiz.php
-├── logout.php
-└── README.md
-```
+//Installation & Démarrage
+Si vous souhaitez tester le projet localement :
 
-## 🎯 Fonctionnalités
+-Cloner ou télécharger les fichiers dans votre dossier serveur  htdocs.
 
-### Administrateur
-- Visualisation des statistiques
-- Gestion des utilisateurs (activation/désactivation)
-- Gestion des quiz (activation/désactivation)
+Base de données :
 
-### École
-- Création de quiz avec QCM
-- Correction automatique
-- Attribution de points
-- Visualisation des notes
+Créez une base de données (ex: quizzeo_db).
 
-### Entreprise
-- Création de questionnaires (QCM et libres)
-- Statistiques en pourcentages
-- Questionnaires de satisfaction
+Importez les fichiers situés dans le dossier sql/ via PHPMyAdmin.
 
-### Utilisateur
-- Répondre aux quiz via lien
-- Historique des réponses
-- Gestion du profil
+Configuration :
 
-## 🐛 Dépannage
+Vérifiez les identifiants de connexion dans includes/database.php  pour qu'ils correspondent à votre configuration locale.
 
-### Erreur de connexion à la base de données
-- Vérifiez que MySQL est démarré dans XAMPP
-- Vérifiez les identifiants dans `includes/config.php`
+Lancement :
 
-### Tables non créées
-- Réimportez le fichier `sql/database.sql` dans phpMyAdmin
-
-### Page blanche
-- Activez l'affichage des erreurs PHP
-- Vérifiez les logs Apache dans `C:\xampp\apache\logs\error.log`
-
-## 🔒 Sécurité
-
-- Mots de passe hashés avec `password_hash()`
-- Requêtes préparées (PDO) contre les injections SQL
-- Protection CSRF via sessions
-- Validation des entrées utilisateur
-- CAPTCHA lors de l'inscription
-
-## 📝 Différences avec la version sans BDD
-
-| Fonctionnalité | Sans BDD | Avec BDD |
-|----------------|----------|----------|
-| Stockage | Fichiers JSON | MySQL |
-| Performance | Limitée | Optimale |
-| Recherche | Lente | Rapide (index) |
-| Scalabilité | Faible | Élevée |
-| Transactions | Non | Oui |
-| Relations | Manuelles | Automatiques |
-
-## 📞 Support
-
-Pour toute question, consultez:
-- Ce README
-- Les commentaires dans le code
-- Le fichier SQL pour la structure de la BDD
-
----
-
-**Version:** 1.0 (Avec Base de Données MySQL)  
-**Date:** Décembre 2024  
-**Technologies:** PHP, MySQL, JavaScript, CSS, HTML
+Accédez à localhost/nom_du_dossier/index.html.

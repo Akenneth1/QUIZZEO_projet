@@ -227,7 +227,7 @@ $stats = $pdo->query($sql)->fetch();
             <div class="success-message"> <?php echo $success; ?></div>
         <?php endif; ?>
        
-        <!-- STATISTIQUES -->
+          
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number"><?php echo $stats['total_users']; ?></div>
@@ -251,7 +251,7 @@ $stats = $pdo->query($sql)->fetch();
             </div>
         </div>
        
-        <!-- LISTE DES UTILISATEURS -->
+        
         <div class="section">
             <h2 class="section-title"> Gestion des Utilisateurs</h2>
             <table>
@@ -306,7 +306,7 @@ $stats = $pdo->query($sql)->fetch();
             </table>
         </div>
        
-        <!-- LISTE DES QUIZ -->
+        
         <div class="section">
             <h2 class="section-title"> Gestion des Quiz</h2>
             <table>

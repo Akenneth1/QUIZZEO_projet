@@ -1,16 +1,7 @@
--- ============================================
--- SCRIPT SQL POUR QUIZZEO - Version avec BDD
--- ============================================
--- Ce script crée toutes les tables nécessaires pour l'application Quizzeo
--- À exécuter dans phpMyAdmin ou via la ligne de commande MySQL
-
--- Créer la base de données
 CREATE DATABASE IF NOT EXISTS quizzeo CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE quizzeo;
 
--- ============================================
--- TABLE: users (Utilisateurs)
--- ============================================
+
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
@@ -26,9 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
     INDEX idx_active (active)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
--- TABLE: quiz (Quiz)
--- ============================================
+
 CREATE TABLE IF NOT EXISTS quiz (
     id INT AUTO_INCREMENT PRIMARY KEY,
     titre VARCHAR(255) NOT NULL,
@@ -49,9 +38,7 @@ CREATE TABLE IF NOT EXISTS quiz (
     INDEX idx_link_code (link_code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
--- TABLE: questions (Questions des quiz)
--- ============================================
+
 CREATE TABLE IF NOT EXISTS questions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     quiz_id INT NOT NULL,
@@ -66,9 +53,7 @@ CREATE TABLE IF NOT EXISTS questions (
     INDEX idx_quiz (quiz_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
--- TABLE: question_options (Options pour les QCM)
--- ============================================
+
 CREATE TABLE IF NOT EXISTS question_options (
     id INT AUTO_INCREMENT PRIMARY KEY,
     question_id INT NOT NULL,
@@ -78,9 +63,7 @@ CREATE TABLE IF NOT EXISTS question_options (
     INDEX idx_question (question_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
--- TABLE: responses (Réponses aux quiz - Joueurs anonymes)
--- ============================================
+
 CREATE TABLE IF NOT EXISTS responses (
     id INT AUTO_INCREMENT PRIMARY KEY,
     quiz_id INT NOT NULL,
@@ -96,9 +79,7 @@ CREATE TABLE IF NOT EXISTS responses (
     INDEX idx_player (player_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
--- TABLE: response_answers (Réponses individuelles aux questions)
--- ============================================
+
 CREATE TABLE IF NOT EXISTS response_answers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     response_id INT NOT NULL,
@@ -112,9 +93,7 @@ CREATE TABLE IF NOT EXISTS response_answers (
     INDEX idx_question (question_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
--- TABLE: quiz_players (Joueurs connectés à un quiz - Lobby)
--- ============================================
+
 CREATE TABLE IF NOT EXISTS quiz_players (
     id INT AUTO_INCREMENT PRIMARY KEY,
     quiz_id INT NOT NULL,
@@ -126,10 +105,8 @@ CREATE TABLE IF NOT EXISTS quiz_players (
     UNIQUE KEY unique_player_quiz (quiz_id, player_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================
--- INSERTION DU COMPTE ADMINISTRATEUR PAR DÉFAUT
--- ============================================
--- Mot de passe: admin123 (hashé avec password_hash en PHP)
+
+-- hashage du Mot de passe
 INSERT INTO users (nom, prenom, email, password, role, active) 
 VALUES (
     'Admin',
@@ -140,11 +117,7 @@ VALUES (
     TRUE
 ) ON DUPLICATE KEY UPDATE email=email;
 
--- ============================================
--- DONNÉES DE TEST (Optionnel)
--- ============================================
-
--- Créer un compte école de test
+-
 INSERT INTO users (nom, prenom, email, password, role, active) 
 VALUES (
     'Dupont',
@@ -155,7 +128,7 @@ VALUES (
     TRUE
 ) ON DUPLICATE KEY UPDATE email=email;
 
--- Créer un compte entreprise de test
+
 INSERT INTO users (nom, prenom, email, password, role, active) 
 VALUES (
     'Martin',
@@ -166,7 +139,7 @@ VALUES (
     TRUE
 ) ON DUPLICATE KEY UPDATE email=email;
 
--- Créer un compte utilisateur de test
+
 INSERT INTO users (nom, prenom, email, password, role, active) 
 VALUES (
     'Durand',
@@ -177,11 +150,7 @@ VALUES (
     TRUE
 ) ON DUPLICATE KEY UPDATE email=email;
 
--- ============================================
--- VUES UTILES (Optionnel)
--- ============================================
 
--- Vue pour les statistiques des quiz
 CREATE OR REPLACE VIEW quiz_statistics AS
 SELECT 
     q.id,
@@ -197,7 +166,7 @@ LEFT JOIN responses r ON q.id = r.quiz_id
 LEFT JOIN questions qu ON q.id = qu.quiz_id
 GROUP BY q.id;
 
--- Vue pour les utilisateurs connectés récemment
+
 CREATE OR REPLACE VIEW recent_users AS
 SELECT 
     id,
@@ -210,10 +179,5 @@ FROM users
 WHERE last_login >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
 ORDER BY last_login DESC;
 
--- ============================================
--- FIN DU SCRIPT
--- ============================================
-
--- Afficher un message de confirmation
 SELECT 'Base de données Quizzeo créée avec succès!' AS Message;
 SELECT 'Compte admin créé: admin@quizzeo.com / admin123' AS Info;

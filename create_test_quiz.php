@@ -1,7 +1,5 @@
 <?php
-/**
- * SCRIPT DE TEST - Crée un quiz de test avec questions
- */
+
 require_once 'includes/config.php';
 require_once 'includes/quiz_functions.php';
  
@@ -11,11 +9,11 @@ echo "<h1>Création d'un Quiz de Test</h1>";
 echo "<style>body{font-family:Arial;padding:20px;} .success{color:green;} .error{color:red;}</style>";
  
 try {
-    // Créer un quiz de test
+    
     $quizData = [
         'titre' => 'Quiz de Test',
         'description' => 'Quiz créé automatiquement pour tester',
-        'owner_id' => 1, // Supposons que l'utilisateur 1 existe
+        'owner_id' => 1, 
         'owner_role' => 'ecole'
     ];
    
@@ -48,7 +46,7 @@ try {
         if ($qResult['success']) {
             echo "<p class='success'> Question ajoutée</p>";
            
-            // Vérifier que les options sont bien enregistrées
+            
             $sql = "SELECT q.id, q.question, qo.option_text, qo.option_index
                     FROM questions q
                     LEFT JOIN question_options qo ON q.id = qo.question_id
@@ -65,7 +63,6 @@ try {
             }
             echo "</ul>";
            
-            // Lancer le quiz
             updateQuizStatus($quizId, 'lance');
             echo "<p class='success'> Quiz lancé</p>";
            

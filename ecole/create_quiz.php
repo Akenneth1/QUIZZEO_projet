@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_quiz'])) {
     <script>
         let questionCount = 0;
         let currentType = 'qcm';
-        let optionCounts = {}; // Suivre le nombre d'options par question
+        let optionCounts = {}; 
        
         function setQuestionType(type) {
             currentType = type;
@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_quiz'])) {
             const container = document.getElementById('questions-container');
             const qIndex = questionCount++;
             const isMultiple = currentType === 'qcm_multiple';
-            optionCounts[qIndex] = 4; // Commencer avec 4 options
+            optionCounts[qIndex] = 4; 
            
             const html = `
                 <div class="question-item" id="q${qIndex}" data-type="${currentType}">

@@ -1,7 +1,5 @@
 <?php
-/**
- * RÉSULTATS FINAUX - Affiche le score et le classement
- */
+
 session_start();
 require_once 'includes/config.php';
 
@@ -15,7 +13,7 @@ $playerName = $_SESSION['player_name'];
 $score = $_SESSION['score'];
 $answers = $_SESSION['answers'];
 
-// Calculer le score total possible
+
 $sql = "SELECT SUM(points) as total_points FROM questions WHERE quiz_id = :quiz_id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':quiz_id' => $quizId]);
@@ -24,7 +22,7 @@ $totalPoints = $result['total_points'];
 
 $percentage = $totalPoints > 0 ? ($score / $totalPoints) * 100 : 0;
 
-// Enregistrer le résultat dans la base de données
+
 $timeTaken = time() - $_SESSION['start_time'];
 $sql = "INSERT INTO responses (quiz_id, player_name, score, earned_points, total_points, time_taken) 
         VALUES (:quiz_id, :player_name, :score, :earned_points, :total_points, :time_taken)";
@@ -38,7 +36,7 @@ $stmt->execute([
     ':time_taken' => $timeTaken
 ]);
 
-// Récupérer le classement
+
 $sql = "SELECT player_name, earned_points, time_taken, submitted_at 
         FROM responses 
         WHERE quiz_id = :quiz_id 

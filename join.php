@@ -1,8 +1,5 @@
 <?php
-/**
- * PAGE D'ENTRÉE POUR JOUER - Style Kahoot
- * Les joueurs entrent leur nom + code PIN du quiz
- */
+
 session_start();
 ?>
 <!DOCTYPE html>
@@ -162,7 +159,7 @@ session_start();
     </div>
     
     <script>
-        // Auto-format du code PIN
+        
         document.querySelector('input[name="pin"]').addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '');
         });

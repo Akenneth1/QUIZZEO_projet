@@ -1,15 +1,8 @@
-/**
- * FICHIER JAVASCRIPT PRINCIPAL - QUIZZEO
- * 
- * Ce fichier contient toutes les fonctions JavaScript pour l'application
- */
 
-// Attendre que le DOM soit chargé
+
 document.addEventListener('DOMContentLoaded', function() {
     
-    // ============================================
-    // GESTION DES FORMULAIRES
-    // ============================================
+    
     
     // Validation du formulaire d'inscription
     const registerForm = document.querySelector('.register-form');
@@ -31,11 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
-    // ============================================
-    // GESTION DES QUIZ
-    // ============================================
-    
     // Ajouter une question
     const addQuestionBtn = document.getElementById('add-question-btn');
     if (addQuestionBtn) {
@@ -69,11 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
             e.target.closest('.option-input').remove();
         }
     });
-    
-    // ============================================
-    // GESTION DES ALERTES
-    // ============================================
-    
+
     // Auto-fermeture des alertes après 5 secondes
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(function(alert) {
@@ -84,11 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         }, 5000);
     });
-    
-    // ============================================
     // GESTION DU COPIER-COLLER DU LIEN DE QUIZ
-    // ============================================
-    
     const copyLinkBtns = document.querySelectorAll('.copy-link-btn');
     copyLinkBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -98,11 +78,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // ============================================
+  
     // CONFIRMATION DE SUPPRESSION
-    // ============================================
-    
-    const deleteForms = document.querySelectorAll('.delete-form');
+   const deleteForms = document.querySelectorAll('.delete-form');
     deleteForms.forEach(function(form) {
         form.addEventListener('submit', function(e) {
             if (!confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) {
@@ -111,11 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
-    // ============================================
     // ANIMATIONS AU SCROLL
-    // ============================================
-    
     const observerOptions = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
@@ -134,16 +108,13 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(el);
     });
 });
-
-// ============================================
 // FONCTIONS UTILITAIRES
-// ============================================
-
 /**
  * Affiche une alerte
- * @param {string} message Le message à afficher
- * @param {string} type Le type d'alerte (success, error, info)
+ * @param {string} message
+ * @param {string} type
  */
+
 function showAlert(message, type = 'info') {
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${type}`;
@@ -161,7 +132,6 @@ function showAlert(message, type = 'info') {
         }, 5000);
     }
 }
-
 /**
  * Copie du texte dans le presse-papier
  * @param {string} text Le texte à copier
@@ -179,7 +149,7 @@ function copyToClipboard(text) {
 
 /**
  * Ajoute un formulaire de question
- * @param {string} type Le type de question (qcm ou libre)
+ * @param {string} type 
  */
 function addQuestionForm(type) {
     const questionsContainer = document.getElementById('questions-container');
@@ -226,7 +196,7 @@ function addQuestionForm(type) {
 
 /**
  * Ajoute une option à une question QCM
- * @param {HTMLElement} container Le conteneur des options
+ * @param {HTMLElement} container 
  */
 function addOption(container) {
     const optionCount = container.children.length;
@@ -241,8 +211,8 @@ function addOption(container) {
 
 /**
  * Formate une date
- * @param {string} dateString La date à formater
- * @returns {string} La date formatée
+ * @param {string} dateString 
+ * @returns {string} 
  */
 function formatDate(dateString) {
     const date = new Date(dateString);
@@ -252,9 +222,9 @@ function formatDate(dateString) {
 
 /**
  * Calcule le pourcentage
- * @param {number} value La valeur
- * @param {number} total Le total
- * @returns {string} Le pourcentage formaté
+ * @param {number} value 
+ * @param {number} total 
+ * @returns {string} 
  */
 function calculatePercentage(value, total) {
     if (total === 0) return '0%';

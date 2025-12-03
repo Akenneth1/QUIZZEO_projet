@@ -1,8 +1,4 @@
-/* ============================================
-   QUIZZEO - FEUILLE DE STYLE CORRIGÉE
-   ============================================ */
 
-/* Variables CSS */
 :root {
     --primary-color: #4A90E2;
     --primary-dark: #357ABD;
@@ -31,7 +27,7 @@
     --transition: all 0.3s ease;
 }
 
-/* Reset & Base */
+
 * {
     margin: 0;
     padding: 0;
@@ -63,7 +59,7 @@ a {
 
 a:hover { color: var(--primary-dark); }
 
-/* Container */
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -149,7 +145,7 @@ a:hover { color: var(--primary-dark); }
     gap: var(--spacing-md);
 }
 
-/* Alertes */
+
 .alert {
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
@@ -172,7 +168,7 @@ a:hover { color: var(--primary-dark); }
 .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
 .alert-info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
 
-/* Badges */
+
 .badge, .status-badge {
     display: inline-block;
     padding: 4px 12px;
@@ -189,7 +185,7 @@ a:hover { color: var(--primary-dark); }
 .status-en_cours_ecriture { background-color: #fff3cd; color: #856404; }
 .status-lance { background-color: #d1ecf1; color: #0c5460; }
 
-/* Tables */
+
 .data-table {
     width: 100%;
     background-color: var(--white);
@@ -218,7 +214,7 @@ a:hover { color: var(--primary-dark); }
     background-color: var(--gray-light);
 }
 
-/* Cards */
+
 .card {
     background-color: var(--white);
     border-radius: var(--border-radius);
@@ -421,7 +417,7 @@ header nav a:hover {
     box-shadow: var(--shadow-sm);
 }
 
-/* Quiz Grid - CORRECTION DU BUG */
+
 .quiz-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));

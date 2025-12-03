@@ -1,8 +1,5 @@
 <?php
-/**
- * DASHBOARD - QUIZZEO (Version avec BDD)
- * Redirige vers le dashboard approprié selon le rôle
- */
+
 require_once 'includes/config.php';
 require_once 'includes/user_functions.php';
 

@@ -1,7 +1,5 @@
 <?php
-/**
- * VÉRIFIER LES COMPTES ADMIN
- */
+
 require_once 'includes/config.php';
  
 $pdo = getDbConnection();
@@ -9,7 +7,7 @@ $pdo = getDbConnection();
 echo "<h1>Vérification des Comptes Admin</h1>";
 echo "<style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #ddd;padding:10px;text-align:left;} th{background:#667eea;color:white;}</style>";
  
-// Récupérer tous les comptes admin
+
 $sql = "SELECT id, nom, prenom, email, role, active, created_at FROM users WHERE role = 'admin'";
 $stmt = $pdo->query($sql);
 $admins = $stmt->fetchAll();
@@ -42,7 +40,7 @@ if (empty($admins)) {
         echo "<td>" . ($admin['active'] ? '✅ Actif' : '❌ Inactif') . "</td>";
         echo "<td>" . date('d/m/Y H:i', strtotime($admin['created_at'])) . "</td>";
        
-        // Deviner le mot de passe selon l'email
+        
         if (strpos($admin['email'], 'quizzeo.local') !== false) {
             echo "<td><code>Admin@2024!</code></td>";
         } elseif (strpos($admin['email'], 'test.com') !== false || strpos($admin['email'], 'quizzeo.com') !== false) {
@@ -64,11 +62,11 @@ if (empty($admins)) {
         echo "<strong>Compte " . $admin['id'] . ":</strong><br>";
         echo "Email: <code>" . htmlspecialchars($admin['email']) . "</code><br>";
        
-        // Tester les mots de passe possibles
+        
         $passwords = ['admin123', 'Admin@2024!', 'admin', 'password'];
        
         foreach ($passwords as $pwd) {
-            // Récupérer le hash de la base
+            
             $sqlHash = "SELECT password FROM users WHERE id = :id";
             $stmtHash = $pdo->prepare($sqlHash);
             $stmtHash->execute([':id' => $admin['id']]);

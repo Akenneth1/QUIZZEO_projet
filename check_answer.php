@@ -1,7 +1,5 @@
 <?php
-/**
- * VÉRIFICATION DES RÉPONSES - Affiche la correction immédiate
- */
+
 session_start();
 require_once 'includes/config.php';
  
@@ -16,24 +14,24 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $pdo = getDbConnection();
 $questionId = $_POST['question_id'];
  
-// Récupérer la question
+
 $sql = "SELECT * FROM questions WHERE id = :id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':id' => $questionId]);
 $question = $stmt->fetch();
  
-// Récupérer les options
+
 $sql = "SELECT * FROM question_options WHERE question_id = :question_id ORDER BY option_index";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':question_id' => $questionId]);
 $options = $stmt->fetchAll();
  
-// Si pas d'options, créer un tableau vide
+
 if (empty($options)) {
     $options = [];
 }
  
-// Récupérer la réponse de l'utilisateur
+
 $userAnswers = [];
 if ($question['type'] === 'qcm_multiple') {
     $userAnswers = isset($_POST['answers']) ? $_POST['answers'] : [];
@@ -41,13 +39,12 @@ if ($question['type'] === 'qcm_multiple') {
     $userAnswers = [isset($_POST['answer']) ? $_POST['answer'] : null];
 }
  
-// Récupérer les bonnes réponses
+
 $correctAnswers = json_decode($question['correct_answers'], true);
 if (!is_array($correctAnswers)) {
     $correctAnswers = [$correctAnswers];
 }
- 
-// Vérifier si la réponse est correcte
+
 $isCorrect = false;
 if ($question['type'] === 'qcm_multiple') {
     sort($userAnswers);
@@ -56,8 +53,7 @@ if ($question['type'] === 'qcm_multiple') {
 } else {
     $isCorrect = in_array($userAnswers[0], $correctAnswers);
 }
- 
-// Sauvegarder la réponse
+
 $_SESSION['answers'][] = [
     'question_id' => $questionId,
     'user_answers' => $userAnswers,
@@ -192,7 +188,7 @@ if ($isCorrect) {
                         }
                     }
                 } else {
-                    // Afficher les index si pas d'options en base
+                   
                     echo 'Réponse(s) correcte(s) : ' . implode(', ', array_map(function($i) { return 'Option ' . ($i + 1); }, $correctAnswers));
                 }
                 ?>

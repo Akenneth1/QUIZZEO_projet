@@ -1,7 +1,5 @@
 <?php
-/**
- * PAGE DE JEU - Répondre aux questions avec correction immédiate
- */
+
 session_start();
 require_once 'includes/config.php';
 
@@ -13,41 +11,39 @@ $pdo = getDbConnection();
 $quizId = $_SESSION['quiz_id'];
 $playerName = $_SESSION['player_name'];
 
-// Récupérer le quiz et ses questions
+
 $sql = "SELECT * FROM quiz WHERE id = :id";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':id' => $quizId]);
 $quiz = $stmt->fetch();
 
-// Récupérer les questions
+
 $sql = "SELECT * FROM questions WHERE quiz_id = :quiz_id ORDER BY order_num";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':quiz_id' => $quizId]);
 $questions = $stmt->fetchAll();
 
-// Récupérer les options pour chaque question
+
 foreach ($questions as &$question) {
     $sql = "SELECT * FROM question_options WHERE question_id = :question_id ORDER BY option_index";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':question_id' => $question['id']]);
     $question['options'] = $stmt->fetchAll();
     
-    // Décoder les bonnes réponses
+    
     if ($question['correct_answers']) {
         $question['correct_answers_array'] = json_decode($question['correct_answers'], true);
     }
 }
 
-// ============================================
-// Initialiser la session de jeu si nécessaire
-// ============================================
+
 
 if (!isset($_SESSION['current_question'])) {
     $_SESSION['current_question'] = 0;
     $_SESSION['score'] = 0;
 }
 
-// Toujours s'assurer que les clés existent
+
 if (!isset($_SESSION['answers'])) {
     $_SESSION['answers'] = [];
 }
@@ -59,7 +55,7 @@ if (!isset($_SESSION['start_time'])) {
 $currentQuestionIndex = $_SESSION['current_question'];
 $totalQuestions = count($questions);
 
-// Si toutes les questions sont répondues, rediriger vers les résultats
+
 if ($currentQuestionIndex >= $totalQuestions) {
     redirect('results.php');
 }

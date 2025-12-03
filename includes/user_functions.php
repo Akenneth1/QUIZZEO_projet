@@ -1,11 +1,9 @@
 <?php
-/**
-* FONCTIONS DE GESTION DES UTILISATEURS - QUIZZEO (Optimisé)
-*/
+
  
 require_once 'config.php';
  
-// Crée un nouveau compte utilisateur
+
 function createUser($userData) {
     $pdo = getDbConnection();
     if (empty($userData['nom']) || empty($userData['prenom']) || empty($userData['email']) || empty($userData['password']) || empty($userData['role'])) {
@@ -29,7 +27,7 @@ function createUser($userData) {
     }
 }
  
-// Vérifie si un email existe
+
 function emailExists($email) {
     $pdo = getDbConnection();
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
@@ -37,7 +35,7 @@ function emailExists($email) {
     return $stmt->fetchColumn() > 0;
 }
  
-// Authentifie un utilisateur
+
 function authenticateUser($email, $password) {
     $pdo = getDbConnection();
     try {
@@ -62,7 +60,7 @@ function authenticateUser($email, $password) {
     }
 }
  
-// Déconnecte l'utilisateur
+
 function logoutUser() {
     session_unset();
     session_destroy();

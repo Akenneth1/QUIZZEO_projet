@@ -1,7 +1,5 @@
 <?php
-/**
- * HEADER COMMUN - QUIZZEO (Version avec BDD)
- */
+
 if (!isLoggedIn()) {
     redirect('../login.php');
 }

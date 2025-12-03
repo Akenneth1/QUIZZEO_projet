@@ -1,7 +1,5 @@
 <?php
-/**
- * SCRIPT DE DÉBOGAGE - Affiche les quiz et leurs questions
- */
+
 require_once 'includes/config.php';
  
 $pdo = getDbConnection();
@@ -9,7 +7,7 @@ $pdo = getDbConnection();
 echo "<h1>Débogage des Quiz</h1>";
 echo "<style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;margin:20px 0;} th,td{border:1px solid #ddd;padding:8px;text-align:left;} th{background:#667eea;color:white;}</style>";
  
-// Récupérer tous les quiz
+
 $sql = "SELECT * FROM quiz ORDER BY id DESC LIMIT 5";
 $stmt = $pdo->query($sql);
 $quizzes = $stmt->fetchAll();
@@ -19,7 +17,7 @@ echo "<table>";
 echo "<tr><th>ID</th><th>Titre</th><th>PIN</th><th>Statut</th><th>Nb Questions</th></tr>";
  
 foreach ($quizzes as $quiz) {
-    // Compter les questions
+    
     $sqlCount = "SELECT COUNT(*) as count FROM questions WHERE quiz_id = :quiz_id";
     $stmtCount = $pdo->prepare($sqlCount);
     $stmtCount->execute([':quiz_id' => $quiz['id']]);
@@ -33,7 +31,7 @@ foreach ($quizzes as $quiz) {
     echo "<td>" . $count . "</td>";
     echo "</tr>";
    
-    // Afficher les questions de ce quiz
+   
     $sqlQ = "SELECT * FROM questions WHERE quiz_id = :quiz_id ORDER BY order_num";
     $stmtQ = $pdo->prepare($sqlQ);
     $stmtQ->execute([':quiz_id' => $quiz['id']]);
@@ -45,7 +43,7 @@ foreach ($quizzes as $quiz) {
         foreach ($questions as $q) {
             echo "- Q" . $q['id'] . ": " . htmlspecialchars($q['question']) . " (Type: " . $q['type'] . ", Réponses correctes: " . $q['correct_answers'] . ")<br>";
            
-            // Afficher les options
+            
             $sqlO = "SELECT * FROM question_options WHERE question_id = :question_id ORDER BY option_index";
             $stmtO = $pdo->prepare($sqlO);
             $stmtO->execute([':question_id' => $q['id']]);

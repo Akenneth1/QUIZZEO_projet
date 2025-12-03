@@ -21,10 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_quiz'])) {
             foreach ($_POST['questions'] as $q) {
                 $correctAnswers = [];
                 if ($q['type'] === 'qcm_multiple') {
-                    // Réponses multiples
+                    
                     $correctAnswers = isset($q['correct_answers']) ? array_map('intval', $q['correct_answers']) : [];
                 } else {
-                    // QCM simple
+                    
                     if (isset($q['correct_answer'])) {
                         $correctAnswers = [intval($q['correct_answer'])];
                     }

@@ -1,7 +1,5 @@
 <?php
-/**
- * CLASSEMENT EN DIRECT
- */
+
 require_once '../includes/config.php';
 require_once '../includes/user_functions.php';
 require_once '../includes/quiz_functions.php';
@@ -174,7 +172,7 @@ $leaderboard = getQuizLeaderboard($quizId);
     <div class="leaderboard-container">
         <?php if (count($leaderboard) >= 3): ?>
         <div class="podium">
-            <!-- 2ème place -->
+            
             <?php if (isset($leaderboard[1])): ?>
             <div class="podium-place second">
                 <div class="podium-medal">🥈</div>
@@ -183,7 +181,7 @@ $leaderboard = getQuizLeaderboard($quizId);
             </div>
             <?php endif; ?>
             
-            <!-- 1ère place -->
+            
             <?php if (isset($leaderboard[0])): ?>
             <div class="podium-place first">
                 <div class="podium-medal">🥇</div>
@@ -192,7 +190,7 @@ $leaderboard = getQuizLeaderboard($quizId);
             </div>
             <?php endif; ?>
             
-            <!-- 3ème place -->
+            
             <?php if (isset($leaderboard[2])): ?>
             <div class="podium-place third">
                 <div class="podium-medal">🥉</div>

@@ -1,13 +1,8 @@
 <?php
-/**
- * FONCTIONS DE GESTION DES QUIZ - QUIZZEO (Version Kahoot avec BDD)
- */
+
 
 require_once 'config.php';
 
-/**
- * Génère un code PIN à 6 chiffres unique
- */
 function generatePinCode() {
     $pdo = getDbConnection();
     do {
@@ -22,9 +17,7 @@ function generatePinCode() {
 
 
 
-/**
- * Crée un nouveau quiz avec PIN
- */
+
 function createQuiz($quizData) {
     $pdo = getDbConnection();
     
@@ -54,18 +47,11 @@ function createQuiz($quizData) {
     } catch (PDOException $e) {
         return ['success' => false, 'message' => 'Erreur lors de la création du quiz'];
     }
-}
-
-/**
- * Ajoute une question avec support réponses multiples
- */
-function addQuestionToQuiz($quizId, $questionData) {
+}function addQuestionToQuiz($quizId, $questionData) {
     $pdo = getDbConnection();
     
     try {
         $pdo->beginTransaction();
-        
-        // Préparer les bonnes réponses (array)
         $correctAnswers = isset($questionData['correct_answers']) ? $questionData['correct_answers'] : [];
         if (!is_array($correctAnswers)) {
             $correctAnswers = [$correctAnswers];
@@ -85,8 +71,6 @@ function addQuestionToQuiz($quizId, $questionData) {
         ]);
         
         $questionId = $pdo->lastInsertId();
-        
-        // Insérer les options
         if (isset($questionData['options'])) {
             $optionSql = "INSERT INTO question_options (question_id, option_text, option_index) 
                          VALUES (:question_id, :option_text, :option_index)";
@@ -109,9 +93,7 @@ function addQuestionToQuiz($quizId, $questionData) {
     }
 }
 
-/**
- * Récupère un quiz par son ID avec questions
- */
+
 function getQuizById($quizId) {
     $pdo = getDbConnection();
     
@@ -121,21 +103,20 @@ function getQuizById($quizId) {
     $quiz = $stmt->fetch();
     
     if (!$quiz) return null;
-    
-    // Récupérer les questions
+
     $sql = "SELECT * FROM questions WHERE quiz_id = :quiz_id ORDER BY order_num";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([':quiz_id' => $quizId]);
     $questions = $stmt->fetchAll();
     
-    // Récupérer les options
+   
     foreach ($questions as &$question) {
         $sql = "SELECT * FROM question_options WHERE question_id = :question_id ORDER BY option_index";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([':question_id' => $question['id']]);
         $question['options'] = $stmt->fetchAll();
         
-        // Décoder les bonnes réponses
+       
         if ($question['correct_answers']) {
             $question['correct_answers_array'] = json_decode($question['correct_answers'], true);
         }
@@ -145,9 +126,7 @@ function getQuizById($quizId) {
     return $quiz;
 }
 
-/**
- * Récupère un quiz par PIN
- */
+
 function getQuizByPin($pin) {
     $pdo = getDbConnection();
     $sql = "SELECT * FROM quiz WHERE pin_code = :pin";
@@ -159,9 +138,7 @@ function getQuizByPin($pin) {
     return getQuizById($quiz['id']);
 }
 
-/**
- * Récupère les quiz d'un propriétaire
- */
+
 function getQuizByOwner($ownerId) {
     $pdo = getDbConnection();
     $sql = "SELECT * FROM quiz WHERE owner_id = :owner_id ORDER BY created_at DESC";
@@ -170,9 +147,7 @@ function getQuizByOwner($ownerId) {
     return $stmt->fetchAll();
 }
 
-/**
- * Met à jour le statut d'un quiz
- */
+
 function updateQuizStatus($quizId, $status) {
     $pdo = getDbConnection();
     try {
@@ -185,9 +160,7 @@ function updateQuizStatus($quizId, $status) {
     }
 }
 
-/**
- * Récupère les joueurs connectés à un quiz
- */
+
 function getQuizPlayers($quizId) {
     $pdo = getDbConnection();
     $sql = "SELECT * FROM quiz_players WHERE quiz_id = :quiz_id AND is_active = 1 ORDER BY joined_at";
@@ -196,9 +169,7 @@ function getQuizPlayers($quizId) {
     return $stmt->fetchAll();
 }
 
-/**
- * Compte les joueurs
- */
+
 function countQuizPlayers($quizId) {
     $pdo = getDbConnection();
     $sql = "SELECT COUNT(*) FROM quiz_players WHERE quiz_id = :quiz_id AND is_active = 1";
@@ -207,9 +178,7 @@ function countQuizPlayers($quizId) {
     return $stmt->fetchColumn();
 }
 
-/**
- * Récupère le classement d'un quiz
- */
+
 function getQuizLeaderboard($quizId) {
     $pdo = getDbConnection();
     $sql = "SELECT player_name, earned_points, score, time_taken, submitted_at 
@@ -221,9 +190,7 @@ function getQuizLeaderboard($quizId) {
     return $stmt->fetchAll();
 }
 
-/**
- * Compte les réponses
- */
+
 function countQuizResponses($quizId) {
     $pdo = getDbConnection();
     $sql = "SELECT COUNT(*) FROM responses WHERE quiz_id = :quiz_id";
@@ -232,18 +199,14 @@ function countQuizResponses($quizId) {
     return $stmt->fetchColumn();
 }
 
-/**
- * Récupère tous les quiz
- */
+
 function getAllQuiz() {
     $pdo = getDbConnection();
     $sql = "SELECT * FROM quiz ORDER BY created_at DESC";
     return $pdo->query($sql)->fetchAll();
 }
 
-/**
- * Active/désactive un quiz
- */
+
 function toggleQuizStatus($quizId, $active) {
     $pdo = getDbConnection();
     try {
@@ -256,9 +219,7 @@ function toggleQuizStatus($quizId, $active) {
     }
 }
 
-/**
- * Compte les quiz par statut
- */
+
 function countQuizByStatus() {
     $pdo = getDbConnection();
     $sql = "SELECT status, COUNT(*) as count FROM quiz GROUP BY status";

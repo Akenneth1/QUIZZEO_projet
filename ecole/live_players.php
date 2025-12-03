@@ -1,7 +1,5 @@
 <?php
-/**
- * LISTE DES JOUEURS EN DIRECT
- */
+
 require_once '../includes/config.php';
 require_once '../includes/user_functions.php';
 require_once '../includes/quiz_functions.php';

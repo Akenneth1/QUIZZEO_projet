@@ -1,19 +1,16 @@
 <?php
-/**
- * REJOINDRE UN QUIZ PAR LIEN DIRECT
- * URL: join_link.php?code=XXXXXXXX
- */
+
 session_start();
 require_once 'includes/config.php';
  
-// Vérifier si le code est fourni
+
 if (!isset($_GET['code'])) {
     redirect('index.html');
 }
  
 $linkCode = cleanInput($_GET['code']);
  
-// Récupérer le quiz par link_code
+
 $pdo = getDbConnection();
 $sql = "SELECT * FROM quiz WHERE link_code = :link_code AND status = 'lance' AND active = 1";
 $stmt = $pdo->prepare($sql);
@@ -24,14 +21,14 @@ if (!$quiz) {
     redirect('index.html?error=invalid_link');
 }
  
-// Si le joueur a déjà un nom, rediriger vers le lobby
+
 if (isset($_POST['player_name'])) {
     $playerName = cleanInput($_POST['player_name']);
    
     if (empty($playerName)) {
         $error = "Veuillez entrer un pseudo";
     } else {
-        // Ajouter le joueur au lobby
+        
         try {
             $sql = "INSERT INTO quiz_players (quiz_id, player_name) VALUES (:quiz_id, :player_name)
                     ON DUPLICATE KEY UPDATE joined_at = NOW(), is_active = 1";
@@ -41,7 +38,7 @@ if (isset($_POST['player_name'])) {
                 ':player_name' => $playerName
             ]);
         } catch (PDOException $e) {
-            // Le joueur existe déjà
+           
         }
        
         // Sauvegarder dans la session
