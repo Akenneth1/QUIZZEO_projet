@@ -1,10 +1,19 @@
 <?php
+/**
+ * LISTE DES JOUEURS EN DIRECT - Version Simplifiée
+ */
 require_once '../includes/config.php';
 require_once '../includes/user_functions.php';
 require_once '../includes/quiz_functions.php';
 
-if (!isLoggedIn() || !hasRole(ROLE_ECOLE)) redirect('../login.php');
-if (!($quizId = $_GET['id'] ?? null)) redirect('dashboard.php');
+if (!isLoggedIn() || !hasRole(ROLE_ECOLE)) {
+    redirect('../login.php');
+}
+
+$quizId = $_GET['id'] ?? null;
+if (!$quizId) {
+    redirect('dashboard.php');
+}
 
 $quiz = getQuizById($quizId);
 $players = getQuizPlayers($quizId);
@@ -13,42 +22,47 @@ $players = getQuizPlayers($quizId);
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="3">
-    <title>Joueurs Connectés - Quizzeo</title>
+    <meta http-equiv="refresh" content="3"> <title>Joueurs Connectés - Quizzeo</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-        .live-page{min-height:100vh;background:#667eea;padding:20px}
-        .live-header{text-align:center;color:#fff;margin-bottom:40px}
-        .live-title{font-size:42px;margin-bottom:10px}
-        .player-count{font-size:28px;margin:20px 0}
-        .players-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px;max-width:1200px;margin:0 auto}
-        .player-card{background:#fff;padding:25px 15px;border-radius:15px;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.2);animation:fadeIn .5s}
-        @keyframes fadeIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
-        .player-avatar{font-size:56px;margin-bottom:10px}
-        .player-name{font-size:18px;font-weight:bold;color:#333}
-        .player-time{font-size:13px;color:#999;margin-top:5px}
-        .back-btn{position:fixed;top:20px;left:20px;padding:15px 30px;background:#fff;color:#667eea;border-radius:50px;text-decoration:none;font-weight:bold;box-shadow:0 5px 15px rgba(0,0,0,.2)}
+        /* CSS Très Basique sans arrondis ni dégradés */
+        .live-page { background: #f4f4f4; padding: 20px; font-family: sans-serif; }
+        .live-header { text-align: center; color: #333; margin-bottom: 30px; border-bottom: 2px solid #ccc; padding-bottom: 15px; }
+        .live-title { font-size: 32px; margin-bottom: 5px; }
+        .player-count { font-size: 24px; margin-top: 10px; }
+        .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; max-width: 1000px; margin: 0 auto; }
+        .player-card { background: white; padding: 15px; border: 1px solid #ccc; text-align: center; }
+        .player-avatar { font-size: 40px; margin-bottom: 10px; }
+        .player-name { font-size: 16px; font-weight: bold; }
+        .player-time { font-size: 12px; color: #666; margin-top: 5px; }
+        .back-btn { padding: 10px 15px; background: #ddd; color: #333; text-decoration: none; border: 1px solid #999; display: inline-block; margin-bottom: 20px; }
     </style>
 </head>
 <body class="live-page">
-    <a href="dashboard.php" class="back-btn">← Retour</a>
+    <a href="dashboard.php" class="back-btn">← Retour au Dashboard</a>
     
     <div class="live-header">
-        <h1 class="live-title">👥 Joueurs Connectés</h1>
-        <div style="font-size:24px"><?= htmlspecialchars($quiz['titre']); ?></div>
-        <div class="player-count"><?= count($players); ?> joueur<?= count($players) > 1 ? 's' : ''; ?></div>
+        <h1 class="live-title">Joueurs Connectés</h1>
+        <div style="font-size: 18px;"><?php echo htmlspecialchars($quiz['titre']); ?></div>
+        <div class="player-count">
+            Total : **<?php echo count($players); ?> joueur<?php echo count($players) > 1 ? 's' : ''; ?>**
+        </div>
     </div>
     
     <div class="players-grid">
         <?php 
-        $avatars = [];
-        foreach ($players as $i => $p): 
-            $timeAgo = time() - strtotime($p['joined_at']);
-            $timeText = $timeAgo < 60 ? 'À l\'instant' : 'Il y a ' . floor($timeAgo / 60) . ' min';
+        // Réduction du tableau d'avatars pour la concision
+        $avatars = ['😀', '😎', '🤓', '😊', '🥳', '🤩', '😇', '🙂']; 
+        foreach ($players as $index => $player): 
+            $avatar = $avatars[$index % count($avatars)];
+            // Simplification de l'affichage du temps pour la concision
+            $timeAgo = time() - strtotime($player['joined_at']);
+            $timeText = $timeAgo < 60 ? 'À l\'instant' : floor($timeAgo / 60) . ' min';
         ?>
             <div class="player-card">
-                <div class="player-name"><?= htmlspecialchars($p['player_name']); ?></div>
-                <div class="player-time"><?= $timeText; ?></div>
+                <div class="player-avatar"><?php echo $avatar; ?></div>
+                <div class="player-name"><?php echo htmlspecialchars($player['player_name']); ?></div>
+                <div class="player-time">Connecté il y a <?php echo $timeText; ?></div>
             </div>
         <?php endforeach; ?>
     </div>
