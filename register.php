@@ -138,6 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
                     <p class="captcha-question">Combien font <?php echo $_SESSION['captcha_question']; ?> ?</p>
                     <input type="number" id="captcha" name="captcha" required placeholder="Votre réponse">
                 </div>
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
                 <button type="submit" name="register" class="btn btn-primary btn-block">Créer mon compte</button>
             </form>
