@@ -11,7 +11,13 @@ $error = '';
 if (isset($_GET['timeout'])) {
     $error = 'Votre session a expiré. Veuillez vous reconnecter.';
 }
- 
+
+session_start();
+
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Erreur CSRF : requête invalide.");
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $email = cleanInput($_POST['email']);
     $password = $_POST['password'];
