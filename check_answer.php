@@ -6,7 +6,11 @@ require_once 'includes/config.php';
 if (!isset($_SESSION['quiz_id']) || !isset($_SESSION['player_name'])) {
     redirect('join.php');
 }
- 
+session_start();
+
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Erreur CSRF : requête invalide.");
+}
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('play.php');
 }
