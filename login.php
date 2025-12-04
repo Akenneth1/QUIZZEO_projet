@@ -62,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
                     <label for="password">Mot de passe</label>
                     <input type="password" id="password" name="password" required placeholder="••••••••">
                 </div>
+
+             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+             
  
                 <button type="submit" name="login" class="btn btn-primary btn-block">Se connecter</button>
             </form>
