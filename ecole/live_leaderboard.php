@@ -1,10 +1,17 @@
 <?php
+
 require_once '../includes/config.php';
 require_once '../includes/user_functions.php';
 require_once '../includes/quiz_functions.php';
 
-if (!isLoggedIn() || !hasRole(ROLE_ECOLE)) redirect('../login.php');
-if (!($quizId = $_GET['id'] ?? null)) redirect('dashboard.php');
+if (!isLoggedIn() || !hasRole(ROLE_ECOLE)) {
+    redirect('../login.php');
+}
+
+$quizId = $_GET['id'] ?? null;
+if (!$quizId) {
+    redirect('dashboard.php');
+}
 
 $quiz = getQuizById($quizId);
 $leaderboard = getQuizLeaderboard($quizId);
@@ -13,86 +20,65 @@ $leaderboard = getQuizLeaderboard($quizId);
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="5">
-    <title>Classement - Quizzeo</title>
+    <meta http-equiv="refresh" content="5"> <title>Classement - Quizzeo</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-        .leaderboard-page{min-height:100vh;background:#f5576c;padding:20px}
-        .leaderboard-header{text-align:center;color:#fff;margin-bottom:40px}
-        .leaderboard-title{font-size:48px;margin-bottom:10px}
-        .leaderboard-container{max-width:800px;margin:0 auto}
-        .podium{display:flex;justify-content:center;align-items:flex-end;gap:20px;margin-bottom:40px}
-        .podium-place{background:#fff;border-radius:20px;padding:30px 20px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.3);animation:slideUp .6s}
-        @keyframes slideUp{from{opacity:0;transform:translateY(50px)}to{opacity:1;transform:translateY(0)}}
-        .podium-place.first{order:2;width:250px;background:#FFD700}
-        .podium-place.second{order:1;width:200px;background:#C0C0C0}
-        .podium-place.third{order:3;width:200px;background:#CD7F32}
-        .podium-medal{font-size:60px;margin-bottom:10px}
-        .podium-name{font-size:20px;font-weight:bold;margin-bottom:10px}
-        .podium-score{font-size:32px;font-weight:bold}
-        .other-players{background:#fff;border-radius:20px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-        .player-row{display:flex;align-items:center;padding:20px;margin-bottom:10px;background:#f8f9fa;border-radius:15px;transition:.3s}
-        .player-row:hover{transform:translateX(10px);box-shadow:0 5px 15px rgba(0,0,0,.1)}
-        .player-rank{font-size:24px;font-weight:bold;width:60px;text-align:center;color:#667eea}
-        .player-name-col{flex:1;font-size:18px;font-weight:500}
-        .player-score-col{font-size:22px;font-weight:bold;color:#667eea}
-        .back-btn{position:fixed;top:20px;left:20px;padding:15px 30px;background:#fff;color:#f5576c;border-radius:50px;text-decoration:none;font-weight:bold;box-shadow:0 5px 15px rgba(0,0,0,.2)}
+        /* CSS Très Basique sans arrondis ni dégradés */
+        .leaderboard-page { background: #eee; padding: 20px; font-family: sans-serif; }
+        .leaderboard-header { text-align: center; color: #333; margin-bottom: 30px; }
+        .leaderboard-title { font-size: 36px; margin-bottom: 5px; }
+        .leaderboard-container { max-width: 700px; margin: 0 auto; background: white; border: 1px solid #ccc; padding: 10px; }
+        
+        .player-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .player-row:last-child { border-bottom: none; }
+        
+        .player-rank { font-size: 20px; font-weight: bold; width: 40px; text-align: center; }
+        .player-name-col { flex-grow: 1; font-size: 16px; }
+        .player-score-col { font-size: 18px; font-weight: bold; color: #007bff; }
+        
+        .podium-highlight { background-color: #ffe0b2; } /* Pour les 3 premiers */
+        .back-btn { padding: 10px 15px; background: #ddd; color: #333; text-decoration: none; border: 1px solid #999; display: inline-block; margin-bottom: 20px; }
     </style>
 </head>
 <body class="leaderboard-page">
-    <a href="dashboard.php" class="back-btn">← Retour</a>
+    <a href="dashboard.php" class="back-btn">← Retour au Dashboard</a>
     
     <div class="leaderboard-header">
-        <h1 class="leaderboard-title">Résultats</h1>
-        <div style="font-size:24px"><?= htmlspecialchars($quiz['titre']); ?></div>
+        <h1 class="leaderboard-title">🏆 CLASSEMENT EN DIRECT</h1>
+        <div style="font-size: 18px;"><?php echo htmlspecialchars($quiz['titre']); ?></div>
     </div>
     
     <div class="leaderboard-container">
-        <?php if (count($leaderboard) >= 3): ?>
-        <div class="podium">
-            <?php if (isset($leaderboard[1])): ?>
-            <div class="podium-place second">
-                <div class="podium-medal">🥈</div>
-                <div class="podium-name"><?= htmlspecialchars($leaderboard[1]['player_name']); ?></div>
-                <div class="podium-score"><?= $leaderboard[1]['earned_points']; ?> pts</div>
-            </div>
-            <?php endif; ?>
-            
-            <?php if (isset($leaderboard[0])): ?>
-            <div class="podium-place first">
-                <div class="podium-medal">🥇</div>
-                <div class="podium-name"><?= htmlspecialchars($leaderboard[0]['player_name']); ?></div>
-                <div class="podium-score"><?= $leaderboard[0]['earned_points']; ?> pts</div>
-            </div>
-            <?php endif; ?>
-            
-            <?php if (isset($leaderboard[2])): ?>
-            <div class="podium-place third">
-                <div class="podium-medal">🥉</div>
-                <div class="podium-name"><?= htmlspecialchars($leaderboard[2]['player_name']); ?></div>
-                <div class="podium-score"><?= $leaderboard[2]['earned_points']; ?> pts</div>
-            </div>
-            <?php endif; ?>
-        </div>
-        <?php endif; ?>
-        
-        <?php if (count($leaderboard) > 3): ?>
-        <div class="other-players">
-            <h3 style="margin-bottom:20px;text-align:center">Autres joueurs</h3>
-            <?php for ($i = 3; $i < count($leaderboard); $i++): ?>
-                <div class="player-row">
-                    <div class="player-rank">#<?= $i + 1; ?></div>
-                    <div class="player-name-col"><?= htmlspecialchars($leaderboard[$i]['player_name']); ?></div>
-                    <div class="player-score-col"><?= $leaderboard[$i]['earned_points']; ?> pts</div>
-                </div>
-            <?php endfor; ?>
-        </div>
-        <?php endif; ?>
-        
         <?php if (empty($leaderboard)): ?>
-        <div class="other-players">
-            <p style="text-align:center;font-size:20px;color:#999">Aucun joueur n'a encore terminé le quiz</p>
-        </div>
+            <p style="text-align: center; padding: 20px; color: #666;">
+                Aucun joueur n'a encore terminé le quiz.
+            </p>
+        <?php else: ?>
+            <div class="player-row" style="font-weight: bold; border-bottom: 2px solid #333;">
+                <div class="player-rank">#</div>
+                <div class="player-name-col">Nom du joueur</div>
+                <div class="player-score-col">Points</div>
+            </div>
+            
+            <?php foreach ($leaderboard as $i => $player): ?>
+                <?php $rank = $i + 1; ?>
+                <div class="player-row <?php echo $rank <= 3 ? 'podium-highlight' : ''; ?>">
+                    <div class="player-rank">
+                        <?php echo $rank; ?>
+                        <?php if ($rank == 1) echo '🥇'; elseif ($rank == 2) echo '🥈'; elseif ($rank == 3) echo '🥉'; ?>
+                    </div>
+                    <div class="player-name-col"><?php echo htmlspecialchars($player['player_name']); ?></div>
+                    <div class="player-score-col"><?php echo $player['earned_points']; ?> pts</div>
+                </div>
+            <?php endforeach; ?>
         <?php endif; ?>
     </div>
 </body>
