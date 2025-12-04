@@ -1,4 +1,6 @@
 <?php
+$email = sanitize_input($_POST['email']);
+$password = sanitize_input($_POST['password']);
 require_once '../includes/config.php';
 require_once '../includes/user_functions.php';
 require_once '../includes/quiz_functions.php';
