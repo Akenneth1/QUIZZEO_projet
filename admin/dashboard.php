@@ -121,6 +121,7 @@ $stats = $pdo->query("SELECT
             <td><?= date('d/m/Y', strtotime($q['created_at'])); ?></td>
             <td>
                 <form method="POST">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <input type="hidden" name="quiz_id" value="<?= $q['id']; ?>">
                     <button type="submit" name="toggle_quiz">
                         <?= $q['active'] ? 'Désactiver' : 'Activer'; ?>
