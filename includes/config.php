@@ -4,6 +4,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 define('DB_HOST', '127.0.0.1');
 define('DB_PORT', '8889');        
 define('DB_NAME', 'quizzeo');            
