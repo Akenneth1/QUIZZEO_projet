@@ -1,39 +1,21 @@
 <?php
-
 require_once 'includes/config.php';
 require_once 'includes/user_functions.php';
- 
-if (isLoggedIn()) {
-    redirect('dashboard.php');
-}
- 
-$error = '';
-if (isset($_GET['timeout'])) {
-    $error = 'Votre session a expiré. Veuillez vous reconnecter.';
-}
 
-session_start();
+if (isLoggedIn()) redirect('dashboard.php');
 
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    die("Erreur CSRF : requête invalide.");
-}
+$error = isset($_GET['timeout']) ? 'Votre session a expiré. Veuillez vous reconnecter.' : '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
     $email = cleanInput($_POST['email']);
     $password = $_POST['password'];
-   
     if (empty($email) || empty($password)) {
         $error = 'Veuillez remplir tous les champs';
     } else {
         $result = authenticateUser($email, $password);
-        if ($result['success']) {
-            redirect('dashboard.php');
-        } else {
-            $error = $result['message'];
-        }
+        $result['success'] ? redirect('dashboard.php') : $error = $result['message'];
     }
 }
- $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -50,37 +32,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             <h1>Quizzeo</h1>
             <p class="tagline">Plateforme de quiz en ligne</p>
         </div>
- 
+
         <div class="login-form-container">
             <h2>Connexion</h2>
-           
             <?php if ($error): ?>
-                <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
- 
-            <form method="POST" action="login.php" class="login-form">
+
+            <form method="POST" class="login-form">
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required placeholder="votre@email.com"
-                        value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                    <input type="email" id="email" name="email" required placeholder="votre@email.com" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                 </div>
- 
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
                     <input type="password" id="password" name="password" required placeholder="••••••••">
                 </div>
-
-             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-             
- 
                 <button type="submit" name="login" class="btn btn-primary btn-block">Se connecter</button>
             </form>
- 
+
             <div class="form-footer">
                 <p style="color: #666; font-size: 14px;">Contactez l'administrateur pour obtenir un compte</p>
             </div>
         </div>
- 
+
         <div class="info-box">
             <h3>Comptes de test</h3>
             <p><strong>Admin:</strong> admin@quizzeo.com / admin123</p>
@@ -90,7 +65,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         </div>
     </div>
     <script src="assets/js/main.js"></script>
-
 </body>
 </html>
- 

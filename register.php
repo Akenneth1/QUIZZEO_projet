@@ -1,34 +1,24 @@
 <?php
-
 require_once 'includes/config.php';
 require_once 'includes/user_functions.php';
 
-if (isLoggedIn()) {
-    redirect('dashboard.php');
-}
+if (isLoggedIn()) redirect('dashboard.php');
 
-if (!isset($_SESSION['captcha'])) {
+function resetCaptcha() {
     $num1 = rand(1, 10);
     $num2 = rand(1, 10);
     $_SESSION['captcha'] = $num1 + $num2;
     $_SESSION['captcha_question'] = "$num1 + $num2";
 }
 
-$error = '';
-$success = '';
+if (!isset($_SESSION['captcha'])) resetCaptcha();
 
-session_start();
+$error = $success = '';
 
-if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    die("Erreur CSRF : requête invalide.");
-}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
-    $nom = cleanInput($_POST['nom']);
-    $prenom = cleanInput($_POST['prenom']);
-    $email = cleanInput($_POST['email']);
+    extract(array_map('cleanInput', ['nom' => $_POST['nom'], 'prenom' => $_POST['prenom'], 'email' => $_POST['email'], 'role' => $_POST['role']]));
     $password = $_POST['password'];
     $password_confirm = $_POST['password_confirm'];
-    $role = cleanInput($_POST['role']);
     $captcha_answer = intval($_POST['captcha']);
     
     if (empty($nom) || empty($prenom) || empty($email) || empty($password) || empty($role)) {
@@ -39,27 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
         $error = 'Le mot de passe doit contenir au moins 6 caractères';
     } elseif ($captcha_answer !== $_SESSION['captcha']) {
         $error = 'La réponse au CAPTCHA est incorrecte';
-        $num1 = rand(1, 10);
-        $num2 = rand(1, 10);
-        $_SESSION['captcha'] = $num1 + $num2;
-        $_SESSION['captcha_question'] = "$num1 + $num2";
+        resetCaptcha();
     } else {
-        $userData = [
-            'nom' => $nom,
-            'prenom' => $prenom,
-            'email' => $email,
-            'password' => $password,
-            'role' => $role
-        ];
-        
-        $result = createUser($userData);
+        $result = createUser(compact('nom', 'prenom', 'email', 'password', 'role'));
         if ($result['success']) {
             $success = $result['message'] . ' Vous pouvez maintenant vous connecter.';
             $_POST = [];
-            $num1 = rand(1, 10);
-            $num2 = rand(1, 10);
-            $_SESSION['captcha'] = $num1 + $num2;
-            $_SESSION['captcha_question'] = "$num1 + $num2";
+            resetCaptcha();
         } else {
             $error = $result['message'];
         }
@@ -84,36 +60,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
 
         <div class="register-form-container">
             <h2>Inscription</h2>
-            
             <?php if ($error): ?>
-                <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
-            
             <?php if ($success): ?>
                 <div class="alert alert-success">
-                    <?php echo htmlspecialchars($success); ?>
+                    <?= htmlspecialchars($success) ?>
                     <a href="login.php" class="btn btn-primary btn-sm">Se connecter</a>
                 </div>
             <?php endif; ?>
 
-            <form method="POST" action="register.php" class="register-form">
+            <form method="POST" class="register-form">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nom">Nom *</label>
-                        <input type="text" id="nom" name="nom" required placeholder="Votre nom"
-                            value="<?php echo isset($_POST['nom']) ? htmlspecialchars($_POST['nom']) : ''; ?>">
+                        <input type="text" id="nom" name="nom" required placeholder="Votre nom" value="<?= htmlspecialchars($_POST['nom'] ?? '') ?>">
                     </div>
                     <div class="form-group">
                         <label for="prenom">Prénom *</label>
-                        <input type="text" id="prenom" name="prenom" required placeholder="Votre prénom"
-                            value="<?php echo isset($_POST['prenom']) ? htmlspecialchars($_POST['prenom']) : ''; ?>">
+                        <input type="text" id="prenom" name="prenom" required placeholder="Votre prénom" value="<?= htmlspecialchars($_POST['prenom'] ?? '') ?>">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required placeholder="votre@email.com"
-                        value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                    <input type="email" id="email" name="email" required placeholder="votre@email.com" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
                 </div>
 
                 <div class="form-row">
@@ -132,18 +103,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
                     <label for="role">Type de compte *</label>
                     <select id="role" name="role" required>
                         <option value="">-- Sélectionnez --</option>
-                        <option value="<?php echo ROLE_ECOLE; ?>">École</option>
-                        <option value="<?php echo ROLE_ENTREPRISE; ?>">Entreprise</option>
-                        <option value="<?php echo ROLE_UTILISATEUR; ?>">Simple Utilisateur</option>
+                        <option value="<?= ROLE_ECOLE ?>">École</option>
+                        <option value="<?= ROLE_ENTREPRISE ?>">Entreprise</option>
+                        <option value="<?= ROLE_UTILISATEUR ?>">Simple Utilisateur</option>
                     </select>
                 </div>
 
                 <div class="form-group captcha-group">
                     <label for="captcha">Vérification *</label>
-                    <p class="captcha-question">Combien font <?php echo $_SESSION['captcha_question']; ?> ?</p>
+                    <p class="captcha-question">Combien font <?= $_SESSION['captcha_question'] ?> ?</p>
                     <input type="number" id="captcha" name="captcha" required placeholder="Votre réponse">
                 </div>
-                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
                 <button type="submit" name="register" class="btn btn-primary btn-block">Créer mon compte</button>
             </form>

@@ -1,27 +1,15 @@
 <?php
-
 require_once 'includes/config.php';
 require_once 'includes/user_functions.php';
 
-if (!isLoggedIn()) {
-    redirect('login.php');
-}
+if (!isLoggedIn()) redirect('login.php');
 
-switch ($_SESSION['user_role']) {
-    case ROLE_ADMIN:
-        redirect('admin/dashboard.php');
-        break;
-    case ROLE_ECOLE:
-        redirect('ecole/dashboard.php');
-        break;
-    case ROLE_ENTREPRISE:
-        redirect('entreprise/dashboard.php');
-        break;
-    case ROLE_UTILISATEUR:
-        redirect('utilisateur/dashboard.php');
-        break;
-    default:
-        logoutUser();
-        redirect('login.php');
-}
+$dashboards = [
+    ROLE_ADMIN => 'admin/dashboard.php',
+    ROLE_ECOLE => 'ecole/dashboard.php',
+    ROLE_ENTREPRISE => 'entreprise/dashboard.php',
+    ROLE_UTILISATEUR => 'utilisateur/dashboard.php'
+];
+
+isset($dashboards[$_SESSION['user_role']]) ? redirect($dashboards[$_SESSION['user_role']]) : (logoutUser() & redirect('login.php'));
 ?>
