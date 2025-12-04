@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_quiz'])) {
                             <textarea name="answers[<?php echo $question['id']; ?>]" rows="4" required placeholder="Votre réponse..."></textarea>
                         <?php endif; ?>
                     </div>
+                  <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                 <?php endforeach; ?>
                 <button type="submit" name="submit_quiz" class="btn btn-primary btn-block">Soumettre mes réponses</button>
             </form>
