@@ -1,4 +1,6 @@
 <?php
+header("Content-Security-Policy: default-src 'self'; script-src 'self';");
+header("X-XSS-Protection: 1; mode=block");
 
 if (!isLoggedIn()) {
     redirect('../login.php');
