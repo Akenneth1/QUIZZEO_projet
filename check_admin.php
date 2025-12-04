@@ -6,14 +6,17 @@ $pdo = getDbConnection();
  
 echo "<h1>Vérification des Comptes Admin</h1>";
 echo "<style>body{font-family:Arial;padding:20px;} table{border-collapse:collapse;width:100%;} th,td{border:1px solid #ddd;padding:10px;text-align:left;} th{background:#667eea;color:white;}</style>";
- 
+session_start();
 
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Erreur CSRF : requête invalide.");
+} 
 $sql = "SELECT id, nom, prenom, email, role, active, created_at FROM users WHERE role = 'admin'";
 $stmt = $pdo->query($sql);
 $admins = $stmt->fetchAll();
  
 if (empty($admins)) {
-    echo "<p style='color:red;'>❌ AUCUN COMPTE ADMIN TROUVÉ!</p>";
+    echo "<p style='color:red;'> AUCUN COMPTE ADMIN TROUVÉ!</p>";
     echo "<p>Exécute cette requête SQL dans phpMyAdmin:</p>";
     echo "<pre>";
     echo "INSERT INTO users (nom, prenom, email, password, role, active) \n";
@@ -27,7 +30,7 @@ if (empty($admins)) {
     echo ");";
     echo "</pre>";
 } else {
-    echo "<p style='color:green;'>✅ " . count($admins) . " compte(s) admin trouvé(s)</p>";
+    echo "<p style='color:green;'> " . count($admins) . " compte(s) admin trouvé(s)</p>";
    
     echo "<table>";
     echo "<tr><th>ID</th><th>Nom</th><th>Email</th><th>Actif</th><th>Créé le</th><th>Mot de passe possible</th></tr>";
@@ -37,7 +40,7 @@ if (empty($admins)) {
         echo "<td>" . $admin['id'] . "</td>";
         echo "<td>" . htmlspecialchars($admin['prenom'] . ' ' . $admin['nom']) . "</td>";
         echo "<td><strong>" . htmlspecialchars($admin['email']) . "</strong></td>";
-        echo "<td>" . ($admin['active'] ? '✅ Actif' : '❌ Inactif') . "</td>";
+        echo "<td>" . ($admin['active'] ? ' Actif' : ' Inactif') . "</td>";
         echo "<td>" . date('d/m/Y H:i', strtotime($admin['created_at'])) . "</td>";
        
         
@@ -73,7 +76,7 @@ if (empty($admins)) {
             $hash = $stmtHash->fetch()['password'];
            
             if (password_verify($pwd, $hash)) {
-                echo "✅ Mot de passe: <code style='background:#d4edda;padding:5px;'>" . $pwd . "</code><br>";
+                echo " Mot de passe: <code style='background:#d4edda;padding:5px;'>" . $pwd . "</code><br>";
                 break;
             }
         }
@@ -83,7 +86,7 @@ if (empty($admins)) {
 }
  
 echo "<hr>";
-echo "<h2>📝 Pour Mettre à Jour le Mot de Passe</h2>";
+echo "<h2>Pour Mettre à Jour le Mot de Passe</h2>";
 echo "<p>Exécute cette requête SQL:</p>";
 echo "<pre>";
 echo "UPDATE users \n";
