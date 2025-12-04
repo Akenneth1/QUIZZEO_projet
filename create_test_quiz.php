@@ -7,7 +7,11 @@ $pdo = getDbConnection();
  
 echo "<h1>Création d'un Quiz de Test</h1>";
 echo "<style>body{font-family:Arial;padding:20px;} .success{color:green;} .error{color:red;}</style>";
- 
+session_start();
+
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Erreur CSRF : requête invalide.");
+} 
 try {
     
     $quizData = [
