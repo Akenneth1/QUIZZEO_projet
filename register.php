@@ -17,6 +17,11 @@ if (!isset($_SESSION['captcha'])) {
 $error = '';
 $success = '';
 
+session_start();
+
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Erreur CSRF : requête invalide.");
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     $nom = cleanInput($_POST['nom']);
     $prenom = cleanInput($_POST['prenom']);
