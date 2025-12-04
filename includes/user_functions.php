@@ -120,4 +120,7 @@ function getUserByEmail($email) {
     $stmt->execute([$email]);
     return $stmt->fetch();
 }
+function sanitize_input($data) {
+    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
 ?>
