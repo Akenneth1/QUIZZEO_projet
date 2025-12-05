@@ -1,3 +1,5 @@
+*  Mise en place protection injections sql
+
 <?php
 $host = '127.0.0.1';
 $user = 'Zenni';         
@@ -10,3 +12,4 @@ if ($conn->connect_error) {
     die("Erreur de connexion: " . $conn->connect_error);
 }
 ?>
+
