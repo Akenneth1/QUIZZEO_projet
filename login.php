@@ -65,5 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
         </div>
     </div>
     <script src="assets/js/main.js"></script>
+    <?php if (!empty($error)): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
+    </div>
+<?php endif; ?>
 </body>
 </html>
+
