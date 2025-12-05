@@ -68,6 +68,7 @@ echo "<h2>Test de connexion</h2>";
 echo " Connexion à la base de données OK<br>";
 echo " Base: " . DB_NAME . "<br>";
 echo " Host: " . DB_HOST . "<br>";
+echo '<pre>' . htmlspecialchars(print_r($userAnswer, true), ENT_QUOTES, 'UTF-8') . '</pre>';
 ?>
  
  
