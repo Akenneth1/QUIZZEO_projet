@@ -1,6 +1,7 @@
 <?php
 
 session_start();
+echo htmlspecialchars($quizTitle, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
