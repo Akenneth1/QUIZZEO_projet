@@ -59,6 +59,7 @@ foreach ($leaderboard as $index => $entry) {
 unset($_SESSION['current_question']);
 unset($_SESSION['answers']);
 unset($_SESSION['start_time']);
+echo htmlspecialchars($playerName, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
