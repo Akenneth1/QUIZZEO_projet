@@ -17,6 +17,7 @@ if (!$quizId) {
 
 $quiz = getQuizById($quizId);
 $players = getQuizPlayers($quizId);
+echo htmlspecialchars($playerName, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
