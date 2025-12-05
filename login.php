@@ -1,4 +1,5 @@
 <?php
+require_once 'includes/db.php';
 require_once 'includes/config.php';
 require_once 'includes/user_functions.php';
 
@@ -72,4 +73,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
 <?php endif; ?>
 </body>
 </html>
+
 
