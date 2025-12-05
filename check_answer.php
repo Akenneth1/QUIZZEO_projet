@@ -68,6 +68,7 @@ $_SESSION['answers'][] = [
 if ($isCorrect) {
     $_SESSION['score'] += $question['points'];
 }
+ echo '<pre>' . htmlspecialchars(print_r($userAnswer, true), ENT_QUOTES, 'UTF-8') . '</pre>';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
