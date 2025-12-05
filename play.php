@@ -61,6 +61,7 @@ if ($currentQuestionIndex >= $totalQuestions) {
 }
 
 $currentQuestion = $questions[$currentQuestionIndex];
+echo htmlspecialchars($quizTitle, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
