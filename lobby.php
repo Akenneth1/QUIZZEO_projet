@@ -63,6 +63,7 @@ $sql = "SELECT player_name, joined_at FROM quiz_players WHERE quiz_id = :quiz_id
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':quiz_id' => $quizId]);
 $players = $stmt->fetchAll();
+echo htmlspecialchars($quizTitle, ENT_QUOTES, 'UTF-8');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
