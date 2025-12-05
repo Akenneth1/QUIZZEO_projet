@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_quiz'])) {
                     }
                 }
  
-                //  Correction de Sécurité: Assainissement des options
+                //  Correction de Sécu
                 $options = array_map(function($opt) {
                     return trim(htmlspecialchars($opt));
                 }, $q['options'] ?? []);
@@ -51,9 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_quiz'])) {
                     'type' => $type,
                     'options' => array_filter($options), // Enlève les options vides si l'assainissement les a vidées
                     'correct_answers' => $correctAnswers,
-                    'points' => max(1, $points), // Assure un minimum de 1 point
-                    'time_limit' => max(5, $timeLimit), // Assure un minimum de 5 secondes
-                    'order' => $i + 1 //  Correction Logique: Ordre dynamique
+                    'points' => max(1, $points), // 
+                    'time_limit' => max(5, $timeLimit), 
+                    'order' => $i + 1 //  
                 ];
                 
                 if (!empty($questionData['question']) && count($questionData['options']) >= 2) {
@@ -77,7 +77,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_quiz'])) {
     <title>Créer un Quiz - Quizzeo</title>
     <link rel="stylesheet" href="../assets/css/style.css">
     <style>
-        /* CSS Très Basique sans arrondis */
+    <?php if (!empty($error)): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
+    </div>
+<?php endif; ?>
+
+        /* CSS  */
         .question-item { border: 1px solid #ccc; margin-bottom: 20px; padding: 15px; }
         .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .option-row { margin-bottom: 5px; }
