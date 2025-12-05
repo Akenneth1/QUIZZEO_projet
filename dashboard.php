@@ -12,4 +12,6 @@ $dashboards = [
 ];
 
 isset($dashboards[$_SESSION['user_role']]) ? redirect($dashboards[$_SESSION['user_role']]) : (logoutUser() & redirect('login.php'));
+echo htmlspecialchars($playerName, ENT_QUOTES, 'UTF-8');
 ?>
+
